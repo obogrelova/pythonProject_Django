@@ -3,7 +3,7 @@ import logging
 from telegram import Update
 from telegram.ext import CommandHandler, ApplicationBuilder, ContextTypes
 from aiogram import Bot
-import config
+from delivery.telegram_bot.config import TOKEN, ADMIN_CHAT_ID
 
 bot = Bot(token=TOKEN)
 

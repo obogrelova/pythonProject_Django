@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Order
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .telegram_bot.bot import send_message
+from delivery.telegram_bot.bot import send_message
 
 # Create your views here.
 
