@@ -1,0 +1,60 @@
+{% extends "delivery/base.html" %}
+{% block title %}
+    <title>Корзина</title>
+{% endblock %}
+
+{% block content %}
+    <h2 class="text-center mb-4 fm-bold text-dark">Ваша корзина</h2>
+
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm p-4 border-0 rounded-3">
+                    <h3 class="mb-4 fw-bold text-primary">Товары в корзине</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart_items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="rounded me-3" width="50" height="50">
+                                {% endif %}
+                                <div>
+                                    <h5 class="mb-1">{{ item.product.name }}</h5>
+                                    <small class="text-muted">{{ item.product.price }} ₽ × {{ item.quantity }}</small>
+                                </div>
+                            </div>
+                            <div>
+                                <form action="{% url 'update_cart' item.product.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm d-inline w-50">
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Обновить</button>
+                                </form>
+                                <form action="{% url 'remove from cart' item.product.id %}" method="post" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
+                                </form>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm p-4 border-0 rounded-3">
+                    <h3 class="mb-4 fw-bold text-dark">Итого</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold fs-5 text-dark">Сумма:</span>
+                        <span class="text-success fs-4 fw-bold">{{ total_price }} ₽</span>
+                    </div>
+                    <hr>
+                    <a href="{% url 'checkout' %}" class="btn btn-success w-100 py-2 fw-bold">
+                        <i class="bi bi-bag-check"></i> Оформить заказ
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center text-muted">Ваша корзина пуста.</p>
+    {% endif %}
+{% endblock %}
