@@ -6,8 +6,8 @@ from .models import User
 class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['user', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2']
         widgets = {
-            'user': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'email'}),
         }

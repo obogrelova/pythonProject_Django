@@ -10,11 +10,12 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            username = form.save()
+            login(request, username)
             return redirect('home')
         else:
             form = RegisterForm()
+
         return render(request, 'authentication/register.html', {'form': form})
 
 class CustomLoginView(LoginView):

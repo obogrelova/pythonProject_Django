@@ -13,10 +13,10 @@ class ProductForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['bouquet', 'user', 'phone', 'email', 'address']
+        fields = ['bouquet', 'username', 'phone', 'email', 'address']
         widgets = {
             'bouquet': forms.TextInput(attrs={'class': 'form-control', 'id': 'bouquet'}),
-            'user': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'id': 'phone'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'id': 'email'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'id': 'address'}),

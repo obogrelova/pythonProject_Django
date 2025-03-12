@@ -13,7 +13,7 @@ class Product(models.Model):
 
 class Order(models.Model):
     bouquet = models.CharField(verbose_name='Букет', max_length=255)
-    user = models.CharField(verbose_name='Имя клиента', max_length=255)
+    username = models.CharField(verbose_name='Имя клиента', max_length=255)
     phone = models.CharField(verbose_name='Телефон клиента', max_length=20)
     email = models.EmailField(verbose_name='Электронная почта', unique=True)
     address = models.TextField()
