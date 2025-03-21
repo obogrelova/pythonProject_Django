@@ -12,7 +12,25 @@
                     <h3>Войти</h3>
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
+
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label">Имя клиента</label>
+                            <input type="text" name="name" id="id_name" class="form-control" required>
+                        </div>
+
+                        {% if form.name.errors %}
+                            <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Email</label>
+                            <input type="email" name="email" id="id_email" class="form-control" required>
+                        </div>
+
+                        {% if form.email.errors %}
+                            <div class="text-danger">{{ form.email.errors }}</div>
+                        {% endif %}
+
                         <button type="submit" class="btn btn-success w-100">Войти</button>
                     </form>
                 </div>
