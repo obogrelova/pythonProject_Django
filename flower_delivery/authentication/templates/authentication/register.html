@@ -14,22 +14,7 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-
-                        <div class="mb-3">
-                            <label for="id_name" class="form-label">Имя клиента</label>
-                            {{ form.name }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="id_password" class="form-label">Пароль</label>
-                            {{ form.password }}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            {{ form.email }}
-                        </div>
-
+                        {{ form.as_p }}
                         <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
                     </form>
                 </div>
