@@ -12,22 +12,7 @@
                     <h3>Войти</h3>
                     <form method="post">
                         {% csrf_token %}
-
-                        <div class="mb-3">
-                            <label for="id_name" class="form-label">Имя клиента</label>
-                            <input type="text" name="name" id="id_name" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="id_password1" class="form-label">Пароль</label>
-                            <input type="password" name="password1" id="id_password1" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="id_password2" class="form-label">Подтверждение пароля</label>
-                            <input type="password" name="password2" id="id_password2" class="form-control" required>
-                        </div>
-
+                        {{ form.as_p }}
                         <button type="submit" class="btn btn-success w-100">Войти</button>
                     </form>
                 </div>
