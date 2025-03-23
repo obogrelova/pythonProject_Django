@@ -4,9 +4,10 @@ from .models import User
 
 
 class RegistrationForm(UserCreationForm):
+    username = forms.CharField(label='Имя клиента', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Повторить пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
     class Meta:
         model = User
-        fields = ['name', 'password1', 'password2']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
-        }
+        fields = ['username', 'password1', 'password2']
