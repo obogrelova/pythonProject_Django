@@ -17,7 +17,6 @@ def register(request):
 
     return render(request, 'authentication/register.html', {'form': form})
 
-
 def user_login(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
@@ -29,7 +28,6 @@ def user_login(request):
         form = AuthenticationForm()
 
     return render(request, 'authentication/login.html', {'form': form})
-
 
 def user_logout(request):
     logout(request)
