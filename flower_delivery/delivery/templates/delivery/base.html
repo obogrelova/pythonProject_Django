@@ -17,7 +17,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="{% url 'home' %}">
                 <i class="bi bi-flower1 me-2 fs-3"></i>
                 Flower Delivery
             </a>
@@ -26,6 +26,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'cart' %}">Корзина</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'order_form' %}">Оформление заказа</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="/authentication/logout/">
