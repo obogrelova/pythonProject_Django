@@ -74,4 +74,4 @@ def order_form_view(request):
     return render(request, 'delivery/order_form.html', {'cart_items': cart_items, 'total_price': total_price})
 
 def order_success(request, order_id):
-    return render(request, 'delivery/success_page.html', {'order_id': order_id})
+    return render(request, 'delivery/order_success.html', {'order_id': order_id})
