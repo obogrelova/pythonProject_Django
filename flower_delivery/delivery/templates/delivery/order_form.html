@@ -13,20 +13,12 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="name" class="form-label fw-semibold">Имя клиента</label>
-                        <input type="text" class="form-control" id="name" name="name" required placeholder="Ваше имя">
+                        <label for="username" class="form-label fw-semibold">Имя клиента</label>
+                        <input type="text" class="form-control" id="username" name="username" required placeholder="Ваше имя">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label fw-semibold">Телефон</label>
                         <input type="text" class="form-control" id="phone" name="phone" required placeholder="Ваш телефон">
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label fw-semibold">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required placeholder="Ваш email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label fw-semibold">Адрес доставки</label>
-                        <textarea class="form-control" id="address" name="address" required placeholder="Введите адрес"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-success w-100 py-2 fw-bold mt-3">

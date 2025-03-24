@@ -30,10 +30,13 @@
                         <a class="nav-link active" href="{% url 'home' %}">Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'cart' %}">Корзина</a>
+                        <a class="nav-link active" href="{% url 'cart_view' %}">Корзина</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'order_form' %}">Оформление заказа</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'order_success' %}">Завершение заказа</a>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
