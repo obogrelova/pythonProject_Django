@@ -20,10 +20,6 @@ def place_order(request):
             order = form.save(commit=False)
             order.user = request.user
             order.save()
-
-            text = f'Новый заказ!\nБукет: {order.product}\nКлиент: {order.user}\nТелефон: {order.phone}'
-            send_message(text)
-
             return redirect('home')
     else:
         form =OrderForm()
