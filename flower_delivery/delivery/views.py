@@ -62,7 +62,7 @@ def cart_view(request):
         })
         total_price += product.price * quantity
         total_quantity += quantity
-    return render(request, '/delivery/cart.html', {
+    return render(request, 'delivery/cart.html', {
         'cart_items': cart_items,
         'total_price': total_price,
         'total_quantity': total_quantity
@@ -149,7 +149,7 @@ def order_form_view(request):
 
 
 def order_success(request, order_id):
-    return render(request, '/delivery/success_page.html', {'order_id': order_id})
+    return render(request, 'delivery/success_page.html', {'order_id': order_id})
 
 
 @login_required
@@ -167,7 +167,7 @@ def add_to_cart(request, product_id):
     request.session['cart_view'] = cart
     request.session.modified = True
 
-    message.success(request, f'{product.product} добавлен в корзину')
+    messages.success(request, f'{product.product} добавлен в корзину')
     return redirect('cart_view')
 
 

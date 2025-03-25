@@ -32,6 +32,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'cart_view' %}">Корзина</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'order_form' %}">Оформление заказа</a>
+                    </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="/authentication/logout/">
