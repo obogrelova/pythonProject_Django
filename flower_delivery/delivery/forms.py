@@ -12,10 +12,9 @@ class ProductForm(forms.ModelForm):
 
 
 class OrderForm(forms.ModelForm):
-    product = forms.CharField(label='Букет', widget=forms.TextInput(attrs={'class': 'form-input'}))
     username = forms.CharField(label='Имя клиента', widget=forms.TextInput(attrs={'class': 'form-input'}))
     phone = forms.CharField(label='Телефон', widget=forms.TextInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = Order
-        fields = ['product', 'username', 'phone']
+        fields = ['username', 'phone']
