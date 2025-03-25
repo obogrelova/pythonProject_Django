@@ -3,9 +3,9 @@ import logging
 from telegram import Update
 from telegram.ext import CommandHandler, ApplicationBuilder, ContextTypes
 from aiogram import Bot
-from delivery.telegram_bot.config import TOKEN, ADMIN_CHAT_ID
+from delivery.telegram_bot.config import TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,7 +23,7 @@ def send_message(text):
     asyncio.run(send_message_to_admin(text))
 
 async def main():
-    application = ApplicationBuilder().token(TOKEN).build()
+    application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
     application.add_handler(CommandHandler('start', start))
     await application.run_polling()
 
