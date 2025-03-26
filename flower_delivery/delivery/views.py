@@ -35,7 +35,7 @@ def home(request):
 
 
 def place_order(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
@@ -70,29 +70,6 @@ def cart_view(request):
 
 
 @login_required
-def add_to_cart(request, product_id):
-    if request.method == 'POST':
-        product = get_object_or_404(Product, id=product_id)
-        quantity = int(request.POST.get('quantity', 1))
-
-        print(f'Получен запрос на добавление: Продукт ID={product_id}, Количество={quantity}')
-        cart_item, created = Order.objects.get_or_create(user=request.user, product=product)
-
-        if created:
-            cart_item.quantity = quantity
-        else:
-            cart_item.quantity += quantity
-        cart_item.save()
-
-        print(f'Обновлено: Продукт ID={product_id}, Количество в корзине={cart_item.quantity}')
-
-        cart_count = Order.objects.filter(user=request.user).count()
-        return JsonResponse({'cart_count': cart_count})
-    else:
-        return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-@login_required
 def remove_from_cart(request, product_id):
     cart = request.session.get('cart_view', {})
     if str(product_id) in cart:
@@ -114,7 +91,7 @@ def order_form_view(request):
             order = form.save(commit=False)
             order.user = request.user
 
-            cart_item = []
+            cart_items = []
             total_price = 0
 
             for product_id, quantity in cart.items():
@@ -136,7 +113,7 @@ def order_form_view(request):
             message += '\nПродукт:\n'
 
             for item in cart_items:
-                message += f"- {item['product'].product} × {item['total_price']}₽\n"
+                message += f"- {item['product'].name} × {item['total_price']}₽\n"
 
             message += f'\nОбщая сумма: {total_price}₽'
             message += f"\nДата заказа: {order.created_at.strftime('%d.%m.%Y %H:%M')}"
@@ -167,13 +144,13 @@ def add_to_cart(request, product_id):
     request.session['cart_view'] = cart
     request.session.modified = True
 
-    messages.success(request, f'{product.product} добавлен в корзину')
+    messages.success(request, f'{product.name} добавлен в корзину')
     return redirect('cart_view')
 
 
 @csrf_exempt
 def update_cart(request, product_id):
-    if request.mathod == 'POST':
+    if request.method == 'POST':
         try:
             data = json.loads(request.body)
             quantity = int(data.get('quantity', 1))
