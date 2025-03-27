@@ -33,62 +33,117 @@ def place_order(request):
 
 @login_required
 def cart_view(request):
-    cart_items = Order.objects.filter(user=request.user)
-    total_price = sum(item.product.price * item.quantity for item in cart_items)
-    return render(request, 'delivery/cart.html', { 'cart_items': cart_items, 'total_price': total_price})
+    cart = request.session.get('cart_view', {})
 
+    cart_items = []
+    total_price = 0
+    total_quantity = 0
+
+    for product_id, quantity in cart.items():
+        product = Product.objects.get(id=int(product_id))
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'total_price': product.price * quantity
+        })
+        total_price += product.price * quantity
+        total_quantity += quantity
+
+    return render(request, 'delivery/cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'total_quantity': total_quantity
+    })
 
 
 @login_required
 def add_to_cart(request, product_id):
-    if request.method == 'POST':
-        product = get_object_or_404(Product, id=product_id)
-        quantity = int(request.POST.get('quantity', 1))
+    product = get_object_or_404(Product, id=product_id)
+    quantity = int(request.POST.get('quantity', 1))
 
-        if request.user.is_authenticated:
-            user = request.user
-            cart_item, created = Order.objects.get_or_create(user=user, complete=False)
-            if created:
-                cart_item.quantity = quantity
-            else:
-                cart_item.quantity += quantity
-            cart_item.save()
-        messages.success(request, f'{product.name} добавлен в корзину')
-        return redirect('cart_view')
+    cart = request.session.get('cart_view', {})
+
+    if str(product_id) in cart:
+        cart[str(product_id)] += quantity
+    else:
+        cart[str(product_id)] = quantity
+    request.session['cart_view'] = cart
+    request.session.modified = True
+
+    messages.success(request, f'{product.name} добавлен в корзину')
+    return redirect('cart_view')
 
 
 @login_required
 def remove_from_cart(request, product_id):
-    cart_item = get_object_or_404(Order, user=request.user, product_id=product_id)
-    cart_item.delete()
-    messages.success(request, 'Товар удален из корзины.')
+    cart = request.session.get('cart_view', {})
+    if str(product_id) in cart:
+        del cart[str(product_id)]
+    request.session['cart_view'] = cart
     return redirect('cart_view')
-
 
 @login_required
 def update_cart(request, product_id):
-    cart_item = get_object_or_404(Order, user=request.user, product_id=product_id)
     if request.method == 'POST':
-        new_quantity = int(request.POST.get('quantity', 1))
-        if new_quantity > 0:
-            cart_item.quantity = new_quantity
-            cart_item.save()
-        else:
-            cart_item.delete()
-    return redirect('cart_view')
+        quantity = int(request.POST.get('quantity', 1))
 
+        cart = request.session.get('cart_view', {})
+        cart[str(product_id)] = quantity
+        request.session['cart_view'] = cart
+        return redirect('cart_view')
 
 @login_required
 def order_form_view(request):
-    cart_items = Order.objects.filter(user=request.user)
-    total_price = sum(item.product.price * item.quantity for item in cart_items)
+    cart = request.session.get('cart_view', {})
 
-    if request.method == 'POST':
-        cart_items.delete()
-        messages.success(request, 'Заказ успешно оформлен!')
+    if not cart:
         return redirect('cart_view')
 
-    return render(request, 'delivery/order_form.html', {'cart_items': cart_items, 'total_price': total_price})
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            if request.user.is_authenticated:
+                order.user = request.user
+
+                cart_items = []
+                total_price = 0
+
+                for product_id, quantity in cart.items():
+                    product = Product.objects.get(id=int(product_id))
+                    item_total = product.price * quantity
+                    total_price += item_total
+                    cart_items.append({
+                        'product': product,
+                        'quantity': quantity,
+                        'total_price': item_total
+                    })
+
+                order.total_price = total_price
+                order.save()
+
+                request.session['cart_view'] = {}
+                messages.success(request, 'Заказ успешно оформлен!')
+                return redirect('order_success', order_id=order.id)
+    else:
+        form = OrderForm()
+
+    cart_items = [
+        {
+            'product': Product.objects.get(id=int(product_id)),
+            'quantity': quantity,
+            'total_price': Product.objects.get(id=int(product_id)).price * quantity,
+        }
+        for product_id, quantity in cart.items()
+    ]
+
+    total = sum(item['total_price'] for item in cart_items)
+
+    return render(request, 'delivery/order_form.html',{
+        'form': form,
+        'cart_items': cart_items,
+        'total': total
+    })
 
 
 def order_success(request, order_id):
