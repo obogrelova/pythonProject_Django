@@ -16,7 +16,6 @@ class Product(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     username = models.CharField(max_length=150, unique=True)
-    complete = models.BooleanField(default=False, null=True, blank=False)
     phone = models.CharField(max_length=30)
 
     def __str__(self):

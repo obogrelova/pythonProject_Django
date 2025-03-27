@@ -2,10 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Order
 from .forms import OrderForm
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.contrib import messages
 from delivery.telegram_bot.bot import send_message
-from delivery.telegram_bot.config import TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
 import requests
 
 
@@ -29,6 +27,11 @@ def place_order(request):
     else:
         form = OrderForm()
     return render(request, 'delivery/order_form.html', {'form': form})
+
+
+def send_order_notification(order):
+    text = f'Новый заказ!\nКлиент: {order.user}\nТелефон: {order.phone}'
+    send_message(text)
 
 
 @login_required
