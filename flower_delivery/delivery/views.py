@@ -60,7 +60,7 @@ def order_form_view(request):
                 request.session['cart_view'] = {}
 
                 send_order_notification(order)
-                
+
                 messages.success(request, 'Заказ успешно оформлен!')
                 return redirect('order_success', order_id=order.id)
     else:
