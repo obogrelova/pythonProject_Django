@@ -2,7 +2,7 @@ import asyncio
 import logging
 from telegram import Update
 from telegram.ext import CommandHandler, Application, ContextTypes
-from config import TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
+from delivery.telegram_bot.config import TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
 
 logging.basicConfig(level=logging.INFO)
 

@@ -27,63 +27,6 @@ def send_order_notification(order):
     asyncio.create_task(send_message(text))
 
 
-@login_required
-def order_form_view(request):
-    cart = request.session.get('cart_view', {})
-
-    if not cart:
-        return redirect('cart_view')
-
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            if request.user.is_authenticated:
-                order.user = request.user
-
-                cart_items = []
-                total_price = 0
-
-                for product_id, quantity in cart.items():
-                    product = Product.objects.get(id=int(product_id))
-                    item_total = product.price * quantity
-                    total_price += item_total
-                    cart_items.append({
-                        'product': product,
-                        'quantity': quantity,
-                        'total_price': item_total
-                    })
-
-                order.total_price = total_price
-                order.save()
-
-                request.session['cart_view'] = {}
-
-                send_order_notification(order)
-
-                messages.success(request, 'Заказ успешно оформлен!')
-                return redirect('order_success', order_id=order.id)
-    else:
-        form = OrderForm()
-
-    cart_items = [
-        {
-            'product': Product.objects.get(id=int(product_id)),
-            'quantity': quantity,
-            'total_price': Product.objects.get(id=int(product_id)).price * quantity,
-        }
-        for product_id, quantity in cart.items()
-    ]
-
-    total = sum(item['total_price'] for item in cart_items)
-
-    return render(request, 'delivery/order_form.html', {
-        'form': form,
-        'cart_items': cart_items,
-        'total': total
-    })
-
-
 def place_order(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -158,6 +101,63 @@ def update_cart(request, product_id):
         cart[str(product_id)] = quantity
         request.session['cart_view'] = cart
         return redirect('cart_view')
+
+    
+@login_required
+def order_form_view(request):
+    cart = request.session.get('cart_view', {})
+
+    if not cart:
+        return redirect('cart_view')
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            if request.user.is_authenticated:
+                order.user = request.user
+
+                cart_items = []
+                total_price = 0
+
+                for product_id, quantity in cart.items():
+                    product = Product.objects.get(id=int(product_id))
+                    item_total = product.price * quantity
+                    total_price += item_total
+                    cart_items.append({
+                        'product': product,
+                        'quantity': quantity,
+                        'total_price': item_total
+                    })
+
+                order.total_price = total_price
+                order.save()
+
+                request.session['cart_view'] = {}
+
+                send_order_notification(order)
+
+                messages.success(request, 'Заказ успешно оформлен!')
+                return redirect('order_success', order_id=order.id)
+    else:
+        form = OrderForm()
+
+    cart_items = [
+        {
+            'product': Product.objects.get(id=int(product_id)),
+            'quantity': quantity,
+            'total_price': Product.objects.get(id=int(product_id)).price * quantity,
+        }
+        for product_id, quantity in cart.items()
+    ]
+
+    total = sum(item['total_price'] for item in cart_items)
+
+    return render(request, 'delivery/order_form.html', {
+        'form': form,
+        'cart_items': cart_items,
+        'total': total
+    })
 
 
 def order_success(request, order_id):
