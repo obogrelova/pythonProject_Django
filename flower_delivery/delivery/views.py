@@ -1,11 +1,10 @@
-import asyncio
-import logging
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Order
 from .forms import OrderForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from delivery.telegram_bot.bot import send_message
+from delivery.telegram_bot.message import send_message
 
 
 # Create your views here.
@@ -14,17 +13,6 @@ from delivery.telegram_bot.bot import send_message
 def home(request):
     products = Product.objects.all()
     return render(request, 'delivery/home.html', {'products': products})
-
-
-def send_order_notification(order):
-    text = (
-        f'Новый заказ!\n'
-        f'Клиент: {order.user.username if order.user else "Гость"}\n'
-        f'Телефон: {order.phone}\n'
-        f'Итоговая сумма: {order.total_price} ₽'
-    )
-
-    asyncio.create_task(send_message(text))
 
 
 def place_order(request):
@@ -92,6 +80,7 @@ def remove_from_cart(request, product_id):
     request.session['cart_view'] = cart
     return redirect('cart_view')
 
+
 @login_required
 def update_cart(request, product_id):
     if request.method == 'POST':
@@ -100,9 +89,21 @@ def update_cart(request, product_id):
         cart = request.session.get('cart_view', {})
         cart[str(product_id)] = quantity
         request.session['cart_view'] = cart
-        return redirect('cart_view')
+        request.session.modified = True
 
-    
+        total_price = sum(
+            Product.objects.get(id=int(product_id)).price * quantity
+            for product_id, quantity in cart.items()
+        )
+        total_quantity = sum(cart.values())
+
+        return render(request, 'delivery/cart.html', {
+            'success': True,
+            'total_quantity': total_quantity,
+            'total_price': total_price
+        })
+
+
 @login_required
 def order_form_view(request):
     cart = request.session.get('cart_view', {})
@@ -119,24 +120,33 @@ def order_form_view(request):
 
                 cart_items = []
                 total_price = 0
+                total_quantity = 0
 
                 for product_id, quantity in cart.items():
                     product = Product.objects.get(id=int(product_id))
-                    item_total = product.price * quantity
-                    total_price += item_total
                     cart_items.append({
                         'product': product,
                         'quantity': quantity,
-                        'total_price': item_total
+                        'total_price': product.price * quantity
                     })
+                    total_price += product.price * quantity
+                    total_quantity += quantity
 
                 order.total_price = total_price
                 order.save()
 
+                text = (
+                    f'Новый заказ!\n'
+                    f'Клиент: {order.username}\n'
+                    f'Телефон: {order.phone}\n'
+                    f'Итоговая сумма: {total_price} ₽')
+
+                if text != '':
+                    text += f'{text}'
+
+                send_message(text)
+
                 request.session['cart_view'] = {}
-
-                send_order_notification(order)
-
                 messages.success(request, 'Заказ успешно оформлен!')
                 return redirect('order_success', order_id=order.id)
     else:
