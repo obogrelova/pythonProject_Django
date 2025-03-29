@@ -68,7 +68,7 @@ def add_to_cart(request, product_id):
     request.session['cart_view'] = cart
     request.session.modified = True
 
-    messages.success(request, f'{product.name} добавлен в корзину')
+    messages.success(request, f'{product.flowers} добавлен в корзину')
     return redirect('cart_view')
 
 
@@ -139,6 +139,7 @@ def order_form_view(request):
                     f'Новый заказ!\n'
                     f'Клиент: {order.username}\n'
                     f'Телефон: {order.phone}\n'
+                    f'Название: {order.flowers}\n'
                     f'Итоговая сумма: {total_price} ₽\n'
                 )
 
