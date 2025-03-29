@@ -139,7 +139,7 @@ def order_form_view(request):
                     f'Новый заказ!\n'
                     f'Клиент: {order.username}\n'
                     f'Телефон: {order.phone}\n'
-                    f'Букет: {order.bouquet}\n'
+                    f'Букет: {order.name}\n'
                     f'Итоговая сумма: {total_price} ₽\n'
                 )
 
