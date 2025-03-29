@@ -120,17 +120,16 @@ def order_form_view(request):
 
                 cart_items = []
                 total_price = 0
-                total_quantity = 0
 
                 for product_id, quantity in cart.items():
                     product = Product.objects.get(id=int(product_id))
+                    item_total = product.price * quantity
+                    total_price += item_total
                     cart_items.append({
                         'product': product,
                         'quantity': quantity,
-                        'total_price': product.price * quantity
+                        'total_price': item_total
                     })
-                    total_price += product.price * quantity
-                    total_quantity += quantity
 
                 order.total_price = total_price
                 order.save()
@@ -140,9 +139,6 @@ def order_form_view(request):
                     f'Клиент: {order.username}\n'
                     f'Телефон: {order.phone}\n'
                     f'Итоговая сумма: {total_price} ₽')
-
-                if text != '':
-                    text += f'{text}'
 
                 send_message(text)
 

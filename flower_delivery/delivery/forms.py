@@ -14,8 +14,7 @@ class ProductForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     username = forms.CharField(label='Имя клиента', widget=forms.TextInput(attrs={'class': 'form-input'}))
     phone = forms.CharField(label='Телефон', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    total_price = forms.DecimalField(label='Цена', widget=forms.TextInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = Order
-        fields = ['username', 'phone', 'total_price']
+        fields = ['username', 'phone']
