@@ -132,6 +132,7 @@ def order_form_view(request):
                     })
 
                 order.total_price = total_price
+                print(f'Сумма перед сохранением заказа: {total_price}')
                 order.save()
 
                 text = (
