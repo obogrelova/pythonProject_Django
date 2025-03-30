@@ -4,7 +4,7 @@ from .models import Product, Order
 class ProductForm(forms.ModelForm):
     name = forms.CharField(label='Название', widget=forms.TextInput(attrs={'class': 'form-input'}))
     price = forms.DecimalField(label='Цена', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    image = forms.ImageField(label='Изображение', widget=forms.ClearableFileInput(attrs={'class': 'form-control-lg'}))
+    image = forms.ImageField(label='Изображение', widget=forms.ClearableFileInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = Product
