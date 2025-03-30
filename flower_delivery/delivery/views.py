@@ -2,14 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Product, Order
 from .forms import OrderForm
 from django.contrib.auth.decorators import login_required
+import requests
 from django.conf import settings
 from django.contrib import messages
-from delivery.telegram_bot.message_to_admin import send_message, send_photo
+from delivery.telegram_bot.message_to_admin import send_message
 
 
 # Create your views here.
 
-image_url = f'{settings.MEDIA_URL}{Product.image}'
 
 def home(request):
     products = Product.objects.all()
@@ -136,23 +136,14 @@ def order_form_view(request):
                     print(f'Сумма перед сохранением заказа: {total_price}')
                     order.save()
 
-                    caption = f'{product.name} - {quantity} шт.\nЦена: {product.price} ₽'
-
-                    print(f'product.image.url: {product.image.url}')
-
-                    if product.image:
-                        send_photo(product.image.url, caption)
-                    else:
-                        send_message(caption)
-
-                final_text = (
+                text = (
                     f'Новый заказ!\n'
                     f'Клиент: {order.username}\n'
                     f'Телефон: {order.phone}\n'
                     f'Итоговая сумма: {total_price} ₽\n'
                 )
 
-                send_message(final_text)
+                send_message(text)
 
                 request.session['cart_view'] = {}
                 messages.success(request, 'Заказ успешно оформлен!')
