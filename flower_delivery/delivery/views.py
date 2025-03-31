@@ -3,9 +3,9 @@ from .models import Product, Order
 from .forms import OrderForm
 from django.contrib.auth.decorators import login_required
 import requests
-from django.conf import settings
 from django.contrib import messages
 from delivery.telegram_bot.message_to_admin import send_message
+
 
 
 # Create your views here.
@@ -136,14 +136,8 @@ def order_form_view(request):
                     print(f'Сумма перед сохранением заказа: {total_price}')
                     order.save()
 
-                text = (
-                    f'Новый заказ!\n'
-                    f'Клиент: {order.username}\n'
-                    f'Телефон: {order.phone}\n'
-                    f'Итоговая сумма: {total_price} ₽\n'
-                )
-
-                send_message(text)
+                    caption = f'{product.name} - {quantity} шт.\nЦена: {product.price} ₽'
+                    send_message(caption)
 
                 request.session['cart_view'] = {}
                 messages.success(request, 'Заказ успешно оформлен!')
