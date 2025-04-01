@@ -6,7 +6,7 @@ from django.conf import settings
 import os
 import requests
 from django.contrib import messages
-from delivery.telegram_bot.message_to_admin import send_message, send_photo
+from delivery.telegram_bot.message_to_admin import send_photo
 
 # Create your views here.
 
@@ -135,17 +135,12 @@ def order_form_view(request):
                     print(f'Сумма перед сохранением заказа: {total_price}')
                     order.save()
 
-                    caption = f'Новый заказ!\nКлиент: {order.username}\nТелефон: {order.phone}\n'
-
-                    for product_id, quantity in cart.items():
-                        product = Product.objects.get(id=int(product_id))
-                        item_total = product.price * quantity
-                        caption += f'\n{product.name} - {quantity} шт. (Цена: {item_total} ₽)'
-
-                    caption += f'\nОбщая сумма заказа: {total_price} ₽'
-
-                    send_message(caption)
-
+                    caption = (f'Новый заказ!\n'
+                                f'Клиент: {order.username}\n'
+                                f'Телефон: {order.phone}\n'
+                                f'{product.name} - {quantity} шт.\n'
+                                f'Цена: {total_price} ₽'
+                    )
                     for product_id, quantity in cart.items():
                         product = Product.objects.get(id=int(product_id))
                         if product.image:
