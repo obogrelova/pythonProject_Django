@@ -6,6 +6,8 @@ from aiogram.types import FSInputFile
 from django.conf import settings
 from .config import TELEGRAM_BOT_TOKEN, ADMIN_CHAT_ID
 
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
