@@ -141,11 +141,8 @@ def order_form_view(request):
                                 f'{product.name} - {quantity} шт.\n'
                                 f'Цена: {total_price} ₽'
                     )
-                    for product_id, quantity in cart.items():
-                        product = Product.objects.get(id=int(product_id))
-                        if product.image:
-                            photo_path = os.path.join(settings.MEDIA_ROOT, product.image.name)
-                            send_photo(photo_path, caption)
+                    photo_path = os.path.join(settings.MEDIA_ROOT, product.image.name)
+                    send_photo(photo_path, caption)
 
                 request.session['cart_view'] = {}
                 messages.success(request, 'Заказ успешно оформлен!')
