@@ -1,6 +1,6 @@
 # pythonProject_Django
 
-САЙТ FLOWER_DELIVERY С ДОСТАВКОЙ ЦВЕТОВ И ПОЛУЧЕНИЕ ЗАКАЗОВ ЧЕРЕЗ TELEGRAM-БОТА 
+САЙТ "FLOWER DELIVERY" С ДОСТАВКОЙ ЦВЕТОВ И ПОЛУЧЕНИЕ ЗАКАЗОВ ЧЕРЕЗ TELEGRAM-БОТА 
 
 ЦЕЛЬ ПРОЕКТА:
 

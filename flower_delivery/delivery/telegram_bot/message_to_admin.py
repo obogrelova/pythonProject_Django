@@ -22,7 +22,8 @@ def send_photo(photo_url, caption):
     photo_path = os.path.join(settings.MEDIA_ROOT, photo_url.replace(settings.MEDIA_URL, ''))
 
     try:
-        loop = asyncio.get_running_loop()
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         loop.run_in_executor(None, lambda: asyncio.run(send_photo_to_admin(photo_path, caption)))
     except RuntimeError:
         asyncio.run(send_photo_to_admin(photo_path, caption))
