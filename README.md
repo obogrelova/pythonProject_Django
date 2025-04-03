@@ -20,7 +20,7 @@ Python 3.10+;
 
 Установка зависимостей (после завершения проекта):
 
-pip install -r requirements.txt
+pip freeze > requirements.txt
 
 ЗАПУСК ПРОЕКТА:
 
