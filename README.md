@@ -16,9 +16,9 @@
 
 Python 3.10+;
 Встроенная база данных SQLite (используется Django);
-Установленные зависимости из requirements.txt
+Создание файла requirements.txt после завершения проекта.
 
-Установка зависимостей (после завершения проекта):
+Создание файла requirements.txt:
 
 pip freeze > requirements.txt
 
